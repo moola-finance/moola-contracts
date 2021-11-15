@@ -1,12 +1,15 @@
 # Moola Finance Contracts
 
+## Mainnet 
+$MOOLA - [0x6510f4477CD695AeB191092793309adE51e0D14D](https://bscscan.com/address/0x6510f4477CD695AeB191092793309adE51e0D14D#code)
+
 ## Testnet 
 $MOOLA - [0x769173eDb5572c0f4E77A3a6f5CE20784F986bba](https://testnet.bscscan.com/address/0x769173eDb5572c0f4E77A3a6f5CE20784F986bba)
 
 # Deployment
 
 ```shell
-npx hardhat run scripts/deploy.ts --network ropsten
+npx hardhat run scripts/deploy.ts --network testnet
 ```
 
 # Contract verification

@@ -24,21 +24,19 @@ contract MoolaToken is ERC20, Ownable {
 
     address public deadWallet = 0x000000000000000000000000000000000000dEaD;
 
-    address public immutable BTC = address(0x6ce8dA28E2f864420840cF74474eFf5fD80E65B8); //BTC - TESTNET
-    // address public immutable BTC = address(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c); //BTC - MAINNET
+    address public immutable BTC = address(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c);
 
-    // amount needed in wallet before recieveing divs
     uint256 public swapTokensAtAmount = 500000 * (10**18);
 
     mapping(address => bool) public _isBlacklisted;
 
-    uint256 public BTCRewardsFee = 7;
+    uint256 public BTCRewardsFee = 8;
     uint256 public marketingFee = 4;
     uint256 public liquidityFee = 3;
 
     uint256 public totalFees = BTCRewardsFee.add(liquidityFee).add(marketingFee);
 
-    address public _marketingWalletAddress = 0x6e520381B039c026052Bca7C79e5C71B6aF3b64f;
+    address public _marketingWalletAddress = 0x98A0c68d23275DcFE3f7b85f84c51b9e892a15Ad;
 
     // use by default 300,000 gas to process auto-claiming dividends
     uint256 public gasForProcessing = 300000;
@@ -79,8 +77,7 @@ contract MoolaToken is ERC20, Ownable {
     constructor() public ERC20("Moola Token", "MOOLA") {
         dividendTracker = new DividendTracker();
 
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xD99D1c33F9fC3444f8101754aBC46c52416550D1); // TestNet
-        // IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E); // MainNet
+        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
         // Create a uniswap pair for this new token
         address _uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory()).createPair(
@@ -104,10 +101,6 @@ contract MoolaToken is ERC20, Ownable {
         excludeFromFees(_marketingWalletAddress, true);
         excludeFromFees(address(this), true);
 
-        /*
-            _mint is an internal function in ERC20.sol that is only called here,
-            and CANNOT be called ever again
-        */
         _mint(owner(), 1000000000 * (10**18));
     }
 
