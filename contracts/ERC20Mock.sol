@@ -25,9 +25,17 @@ contract ERC20Mock is ERC20 {
         emit Deposit(msg.sender, msg.value);
     }
 
-    function withdraw(uint256 wad) public {
-        _burn(msg.sender, wad);
-        payable(msg.sender).transfer(wad);
-        emit Withdrawal(msg.sender, wad);
+    function withdraw(uint256 amount) public {
+        _burn(msg.sender, amount);
+        payable(msg.sender).transfer(amount);
+        emit Withdrawal(msg.sender, amount);
+    }
+
+    function transfer(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external {
+        _transfer(sender, recipient, amount);
     }
 }
