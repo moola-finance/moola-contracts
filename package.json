@@ -1,7 +1,8 @@
 {
   "name": "moola-contracts",
   "scripts": {
-    "build": "hardhat compile"
+    "build": "hardhat compile",
+    "test": "hardhat test"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
