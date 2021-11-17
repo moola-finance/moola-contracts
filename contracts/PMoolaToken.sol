@@ -17,7 +17,7 @@ contract PMoolaToken is Context, ERC20, Ownable {
     address public operationsWalletAddress;
     address public moolaAddress;
 
-    uint256 public totalRaised = 0;
+    uint256 private totalRaised = 0;
 
     mapping(address => bool) private claimed;
     bool private canRedeem;
@@ -68,5 +68,9 @@ contract PMoolaToken is Context, ERC20, Ownable {
     function getMoolaBalance() external view returns (uint256) {
         IERC20 moolaToken = IERC20(moolaAddress);
         return moolaToken.balanceOf(address(this));
+    }
+
+    function getTotalRaised() external view returns (uint256) {
+        return totalRaised;
     }
 }
