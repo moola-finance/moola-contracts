@@ -16,21 +16,15 @@ contract PMoolaToken is Context, ERC20, Ownable {
 
     address public operationsWalletAddress;
     address public moolaAddress;
-    address public bnbAddress = 0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3;
 
     uint256 public totalRaised = 0;
 
     mapping(address => bool) private claimed;
     bool private canRedeem;
 
-    constructor(
-        address _operationsWalletAddress,
-        address _moolaAddress,
-        address _bnbAddress
-    ) Ownable() ERC20("PMoola Token", "PMOOLA") {
+    constructor(address _operationsWalletAddress, address _moolaAddress) Ownable() ERC20("PMoola Token", "PMOOLA") {
         operationsWalletAddress = _operationsWalletAddress;
         moolaAddress = _moolaAddress;
-        bnbAddress = _bnbAddress;
     }
 
     /// @notice Exchange supplied amount of bnb for pMoola
@@ -58,7 +52,21 @@ contract PMoolaToken is Context, ERC20, Ownable {
         moolaToken.transfer(msg.sender, pMoolaBalance);
     }
 
+    /// @notice withdraw funds to operations wallet
+    function withdraw() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "NOTHING_TO_WITHDRAW");
+        (payable(operationsWalletAddress)).transfer(balance);
+    }
+
+    /// @notice enable/disable users ability to redeem
     function setCanRedeem(bool value) external onlyOwner {
         canRedeem = value;
+    }
+
+    /// @notice return total amount of Moola raised locked and available to redeem
+    function getMoolaBalance() external view returns (uint256) {
+        IERC20 moolaToken = IERC20(moolaAddress);
+        return moolaToken.balanceOf(address(this));
     }
 }

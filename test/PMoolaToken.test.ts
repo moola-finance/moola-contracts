@@ -1,37 +1,34 @@
 /* eslint-disable node/no-extraneous-import */
 /* eslint-disable node/no-missing-import */
-import { BigNumber } from "@ethersproject/bignumber";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { ERC20Mock, PMoolaToken } from "../types";
 
 let token: PMoolaToken;
-let marketingWallet: SignerWithAddress;
+let operationsWallet: SignerWithAddress;
 let user: SignerWithAddress;
+let deployer: SignerWithAddress;
 let moolaToken: ERC20Mock;
 
 describe("PMoola Token", function () {
   beforeEach(async function () {
-    [marketingWallet, user] = await ethers.getSigners();
+    [deployer, operationsWallet, user] = await ethers.getSigners();
 
     const ERC20 = await ethers.getContractFactory("ERC20Mock");
-    const bnbToken = await ERC20.deploy("BNB", "BNB", BigNumber.from("1000000000000000000"));
-    await bnbToken.deployed();
-
     moolaToken = (await ERC20.deploy("MOOLA", "MOOLA", ethers.utils.parseEther("1000000000"))) as ERC20Mock;
     await moolaToken.deployed();
 
     const tokenFactory = await ethers.getContractFactory("PMoolaToken");
-    token = (await tokenFactory.deploy(marketingWallet.address, moolaToken.address, bnbToken.address)) as PMoolaToken;
+    token = (await tokenFactory.deploy(operationsWallet.address, moolaToken.address)) as PMoolaToken;
     await token.deployed();
 
     await moolaToken
-      .connect(marketingWallet)
+      .connect(deployer)
       ["transfer(address,address,uint256)"](
-        marketingWallet.address,
+        deployer.address,
         token.address,
-        await moolaToken.balanceOf(marketingWallet.address)
+        await moolaToken.balanceOf(deployer.address)
       );
   });
 
@@ -103,12 +100,12 @@ describe("PMoola Token", function () {
     });
 
     it("Should revert when user has 0 pMoola", async function () {
-      await token.connect(marketingWallet).setCanRedeem(true);
+      await token.connect(deployer).setCanRedeem(true);
       await expect(token.connect(user).redeem()).to.be.revertedWith("NO_PMOOLA_TO_REDEEM");
     });
 
     it("Should exchange 1m pMoola for Moola one for one", async function () {
-      await token.connect(marketingWallet).setCanRedeem(true);
+      await token.connect(deployer).setCanRedeem(true);
 
       const pMoolaBalanceBefore = await token.balanceOf(user.address);
       expect(pMoolaBalanceBefore).to.eq(0);
@@ -128,7 +125,7 @@ describe("PMoola Token", function () {
     });
 
     it("Should exchange 500k pMoola for Moola one for one", async function () {
-      await token.connect(marketingWallet).setCanRedeem(true);
+      await token.connect(deployer).setCanRedeem(true);
 
       const pMoolaBalanceBefore = await token.balanceOf(user.address);
       expect(pMoolaBalanceBefore).to.eq(0);
@@ -145,6 +142,26 @@ describe("PMoola Token", function () {
 
       const moolaBalance = await moolaToken.balanceOf(user.address);
       expect(moolaBalance).to.eq(pMoolaBalanceAfterClaim);
+    });
+  });
+
+  describe("Withdraw: ", async function () {
+    it("Should revert when nothing to withdraw", async function () {
+      await expect(token.connect(deployer).withdraw()).to.be.revertedWith("NOTHING_TO_WITHDRAW");
+    });
+
+    it("Should transfer funds to operations wallet", async function () {
+      await token.connect(deployer).setCanRedeem(true);
+      await token.connect(user).claim({ value: ethers.utils.parseEther("1") });
+
+      const opsWalletBalanceBefore = await ethers.provider.getBalance(operationsWallet.address);
+
+      await token.connect(deployer).withdraw();
+      expect(await ethers.provider.getBalance(token.address)).to.eq(0);
+
+      const opsWalletBalanceAfter = await ethers.provider.getBalance(operationsWallet.address);
+
+      expect(opsWalletBalanceAfter).to.eq(opsWalletBalanceBefore.add(ethers.utils.parseEther("1")));
     });
   });
 });
