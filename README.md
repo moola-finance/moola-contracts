@@ -6,6 +6,8 @@ $MOOLA - [0x6510f4477CD695AeB191092793309adE51e0D14D](https://bscscan.com/addres
 ## Testnet 
 $MOOLA - [0x769173eDb5572c0f4E77A3a6f5CE20784F986bba](https://testnet.bscscan.com/address/0x769173eDb5572c0f4E77A3a6f5CE20784F986bba)
 
+$pMOOLA - [0xab6C85aBF7Ec7264E633448eeDAfa963210fe822](https://testnet.bscscan.com/address/0xab6C85aBF7Ec7264E633448eeDAfa963210fe822)
+
 # Deployment
 
 ```shell
