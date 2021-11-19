@@ -165,7 +165,7 @@ describe("PMoola Token", function () {
     });
   });
 
-  describe.only("Has Claimed: ", async function () {
+  describe("Has Claimed: ", async function () {
     it("Should return false when user has not claimed", async function () {
       const hasClaimed = await token.connect(user).hasClaimed();
       expect(hasClaimed).to.eq(false);
