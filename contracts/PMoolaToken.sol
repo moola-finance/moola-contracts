@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PMoolaToken is Context, ERC20, Ownable {
     uint256 public constant MAX_RAISE = 50 ether;
-    uint256 public constant PMOOLA_PER_BNB = 500_000;
+    uint256 public constant PMOOLA_PER_BNB = 600_000;
 
     address public operationsWalletAddress;
     address public moolaAddress;

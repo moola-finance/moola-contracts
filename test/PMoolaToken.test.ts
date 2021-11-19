@@ -33,24 +33,24 @@ describe("PMoola Token", function () {
   });
 
   describe("Claim: ", async function () {
-    it("Should mint 500k pMoola when claimed with 1 bnb", async function () {
+    it("Should mint 600k pMoola when claimed with 1 bnb", async function () {
       const pMoolaBalanceBefore = await token.balanceOf(user.address);
       expect(pMoolaBalanceBefore).to.eq(0);
 
       await token.connect(user).claim({ value: ethers.utils.parseEther("1") });
 
       const pMoolaBalanceAfter = await token.balanceOf(user.address);
-      expect(pMoolaBalanceAfter).to.eq(ethers.utils.parseEther("500000"));
+      expect(pMoolaBalanceAfter).to.eq(ethers.utils.parseEther("600000"));
     });
 
-    it("Should mint 1Mill pMoola when claimed with 2 bnb", async function () {
+    it("Should mint 1.2 Mill pMoola when claimed with 2 bnb", async function () {
       const pMoolaBalanceBefore = await token.balanceOf(user.address);
       expect(pMoolaBalanceBefore).to.eq(0);
 
       await token.connect(user).claim({ value: ethers.utils.parseEther("2") });
 
       const pMoolaBalanceAfter = await token.balanceOf(user.address);
-      expect(pMoolaBalanceAfter).to.eq(ethers.utils.parseEther("1000000"));
+      expect(pMoolaBalanceAfter).to.eq(ethers.utils.parseEther("1200000"));
     });
 
     it("Should revert when claimed with 2.5 bnb", async function () {
@@ -104,7 +104,7 @@ describe("PMoola Token", function () {
       await expect(token.connect(user).redeem()).to.be.revertedWith("NO_PMOOLA_TO_REDEEM");
     });
 
-    it("Should exchange 1m pMoola for Moola one for one", async function () {
+    it("Should exchange 1.2 m pMoola for Moola one for one", async function () {
       await token.connect(deployer).setCanRedeem(true);
 
       const pMoolaBalanceBefore = await token.balanceOf(user.address);
@@ -113,7 +113,7 @@ describe("PMoola Token", function () {
       await token.connect(user).claim({ value: ethers.utils.parseEther("2") });
 
       const pMoolaBalanceAfterClaim = await token.balanceOf(user.address);
-      expect(pMoolaBalanceAfterClaim).to.eq(ethers.utils.parseEther("1000000"));
+      expect(pMoolaBalanceAfterClaim).to.eq(ethers.utils.parseEther("1200000"));
 
       await token.connect(user).redeem();
 
@@ -124,7 +124,7 @@ describe("PMoola Token", function () {
       expect(moolaBalance).to.eq(pMoolaBalanceAfterClaim);
     });
 
-    it("Should exchange 500k pMoola for Moola one for one", async function () {
+    it("Should exchange 600k pMoola for Moola one for one", async function () {
       await token.connect(deployer).setCanRedeem(true);
 
       const pMoolaBalanceBefore = await token.balanceOf(user.address);
@@ -133,7 +133,7 @@ describe("PMoola Token", function () {
       await token.connect(user).claim({ value: ethers.utils.parseEther("1") });
 
       const pMoolaBalanceAfterClaim = await token.balanceOf(user.address);
-      expect(pMoolaBalanceAfterClaim).to.eq(ethers.utils.parseEther("500000"));
+      expect(pMoolaBalanceAfterClaim).to.eq(ethers.utils.parseEther("600000"));
 
       await token.connect(user).redeem();
 
@@ -171,7 +171,7 @@ describe("PMoola Token", function () {
       expect(hasClaimed).to.eq(false);
     });
 
-    it("Should return true when user has not claimed", async function () {
+    it("Should return true when user has claimed", async function () {
       await token.connect(deployer).setCanRedeem(true);
       await token.connect(user).claim({ value: ethers.utils.parseEther("1") });
       const hasClaimed = await token.connect(user).hasClaimed();
