@@ -164,4 +164,18 @@ describe("PMoola Token", function () {
       expect(opsWalletBalanceAfter).to.eq(opsWalletBalanceBefore.add(ethers.utils.parseEther("1")));
     });
   });
+
+  describe.only("Has Claimed: ", async function () {
+    it("Should return false when user has not claimed", async function () {
+      const hasClaimed = await token.connect(user).hasClaimed();
+      expect(hasClaimed).to.eq(false);
+    });
+
+    it("Should return true when user has not claimed", async function () {
+      await token.connect(deployer).setCanRedeem(true);
+      await token.connect(user).claim({ value: ethers.utils.parseEther("1") });
+      const hasClaimed = await token.connect(user).hasClaimed();
+      expect(hasClaimed).to.eq(true);
+    });
+  });
 });

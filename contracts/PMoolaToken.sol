@@ -49,6 +49,17 @@ contract PMoolaToken is Context, ERC20, Ownable {
         moolaToken.transfer(msg.sender, pMoolaBalance);
     }
 
+    /// @notice return total amount of Moola raised locked and available to redeem
+    function getMoolaBalance() external view returns (uint256) {
+        IERC20 moolaToken = IERC20(moolaAddress);
+        return moolaToken.balanceOf(address(this));
+    }
+
+    /// @notice Checks if message sender has already claimed
+    function hasClaimed() external view returns (bool) {
+        return claimed[msg.sender];
+    }
+
     /// @notice withdraw funds to operations wallet
     function withdraw() external onlyOwner {
         uint256 balance = address(this).balance;
@@ -59,12 +70,6 @@ contract PMoolaToken is Context, ERC20, Ownable {
     /// @notice enable/disable users ability to redeem
     function setCanRedeem(bool value) external onlyOwner {
         canRedeem = value;
-    }
-
-    /// @notice return total amount of Moola raised locked and available to redeem
-    function getMoolaBalance() external view returns (uint256) {
-        IERC20 moolaToken = IERC20(moolaAddress);
-        return moolaToken.balanceOf(address(this));
     }
 
     function getTotalRaised() external view returns (uint256) {
