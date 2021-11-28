@@ -2,7 +2,8 @@
   "name": "moola-contracts",
   "scripts": {
     "build": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "deploy:redeemer" : "npx hardhat run scripts/deployRedeemer.ts --network mainnet"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
